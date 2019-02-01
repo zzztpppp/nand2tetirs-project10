@@ -1,0 +1,42 @@
+// A math library for Jack programming languate
+
+class Math {
+    
+    /** Initialized statical variables */
+    function void init() {
+        return;
+    }
+    
+    /** Calculate absolute value of the given number */
+    function int abs(int x) {
+        if (x < 0) { return -x; }
+        return x;
+    }
+    
+    /** Calculate x times y */
+    function int multiply(int x, int y) {
+        return;
+    }
+    
+    /** Calculate x divided by y */
+    function int divide(int x, int y) {
+        return;
+    }
+    
+    /** Calculate the minimum between x and y */
+    function int min(int x, int y) {
+        if (x > y) { return y; }
+        return x;
+    }
+    
+    /** Calculate the maximum between x and y */
+    function int max(int x, int y) {
+        if (x > y) { return x; }
+        return y;
+    }
+    
+    /** Calculate the square root of the given x */
+    function int sqrt(int x) {
+        return;
+    }
+}
