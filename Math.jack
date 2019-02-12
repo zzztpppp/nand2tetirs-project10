@@ -2,8 +2,24 @@
 
 class Math {
     
+    static Array twoToThe;
+    
+    
     /** Initialized statical variables */
     function void init() {
+        int i;
+        int fill;
+        
+        let twoToThe = Array.new(16);
+        
+        // Fill the elements at ith position wiht 2^i
+        let i = 0;
+        let fill = 1;
+        while (i < 16) {
+            let twoToThe[i] = fill;
+            let fill = fill + fill;
+        }
+        
         return;
     }
     
@@ -15,6 +31,21 @@ class Math {
     
     /** Calculate x times y */
     function int multiply(int x, int y) {
+        int res;
+        int shiftedX;
+        int i;
+        
+        let i = 0;
+        let res = 0;
+        let shiftedX = x;
+        
+        while (i < 16) {
+            if (bit(y, i)) { let res = res + shiftedX; }
+            let shiftedX = shiftedX + shiftedX;
+        }
+        
+     
+        
         return;
     }
     
@@ -38,5 +69,10 @@ class Math {
     /** Calculate the square root of the given x */
     function int sqrt(int x) {
         return;
+    }
+    
+    /** Helper function to check if i's bit of a integer is 1 */
+    funtion boolean bit(int x, int i) {
+        return (x & twoToThe[i]) != 0;
     }
 }
