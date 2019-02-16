@@ -44,8 +44,6 @@ class Math {
             let shiftedX = shiftedX + shiftedX;
         }
         
-     
-        
         return;
     }
     
