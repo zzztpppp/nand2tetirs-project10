@@ -44,7 +44,11 @@ class Math {
             let shiftedX = shiftedX + shiftedX;
         }
         
+<<<<<<< HEAD
+        return res;
+=======
         return;
+>>>>>>> 4f60aac2e5ccc85223f2e35cfce18f0a734269a5
     }
     
     /** Calculate x divided by y */
