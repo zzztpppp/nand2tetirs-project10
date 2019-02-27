@@ -26,10 +26,8 @@ class Main {
         let c = Array.new(500);
         let c[499] = a[2] - b[1];
         do Memory.poke(8004, c[499]);     // RAM[8004] = 100
-        
         do a.dispose();                   // uses Memory.deAlloc
         do b.dispose();
-        
         let b = Array.new(3);
         let b[0] = c[499] - 90;
         do Memory.poke(8005, b[0]);       // RAM[8005] = 10
