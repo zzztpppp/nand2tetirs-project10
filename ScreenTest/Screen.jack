@@ -95,19 +95,24 @@ class Screen {
     function void drawLine(int x1, int y1, int x2, int y2) {
 	    
 		var int dx, dy, diff, a, b, temp, start, end;
+		
+		// For convenience sake, convert the line drawing
+		// from right to left to left to right.
+		if (x1 > x2) {
+		    let temp = x1;
+			let x1 = x2;
+			let x2 = temp;
+			
+			let temp = y1;
+			let y1 = y2;
+			let y2 = temp;
+		}
+		
 		let dx = x2 - x1;
 		let dy = y2 - y1;
 		let diff = 0;
 		let a = 0;
 		let b = 0;
-		
-		// For convenience sake, convert the line drawing
-		// from right to left to left to right.
-		if (dx < 0) {
-		    let temp = x1;
-			let x1 = x2;
-			let x2 = temp;
-		}
 		
 		// Special case for drawing horizontal line.
 		if (dy = 0) {
@@ -157,7 +162,7 @@ class Screen {
 				}
 				else {
 				    let a = a + 1;
-					let diff = diff + dy;
+					let diff = diff - dy;
 				}
 			}
 		}

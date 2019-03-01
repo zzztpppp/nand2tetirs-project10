@@ -19,7 +19,7 @@ class Main {
 		do Screen.drawPixel(510, 255);
 		do Screen.drawPixel(510, 254);
 		do Screen.drawPixel(511, 254);
-		do Screen.drawLine(0, 255, 511, 10);
+		do Screen.drawLine(500, 20, 10, 200);
 		
         //do Screen.drawRectangle(350,120,390,219); // door
         //do Screen.drawRectangle(292,120,332,150); // window
