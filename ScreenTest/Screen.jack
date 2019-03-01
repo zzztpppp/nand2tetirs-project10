@@ -10,13 +10,32 @@
  * the screen is indexed (0,0).
  */
 class Screen {
-
+     
+	 static Array twoToThe;
      static boolean color;
 	 static int screen_base;  // The base address in memory the screen is mapped onto.
 	 static int screen_size;  // The size of the memory the screen is mapped onto.
 	 
     /** Initializes the Screen. */
     function void init() {
+	    
+		var int i;
+        var int fill;
+        
+        let twoToThe = Array.new(16);
+        
+        // Fill the elements at ith position wiht 2^i
+        let i = 0;
+        let fill = 1;
+        while (i < 15) {
+            let twoToThe[i] = fill;
+            let fill = fill + fill;
+            let i = i + 1;
+        }
+        
+        // The largest number a 16 bit 2's complement can represent.
+        let twoToThe[15] = 32767 + 1;
+	    
 	    let color = true;
 		let screen_base = 16384;
 		let screen_size = 8192;
@@ -35,6 +54,7 @@ class Screen {
 		return;
     }
 
+	
     /** Sets the current color, to be used for all subsequent drawXXX commands.
      *  Black is represented by true, white by false. */
     function void setColor(boolean b) {
@@ -44,16 +64,30 @@ class Screen {
 
     /** Draws the (x,y) pixel, using the current color. */
     function void drawPixel(int x, int y) {
-	    var int address, value;
+	    var int address, value, old_value;
+		
+		// Get the current value of the pixels' group.
 		
 		// Get the pixel's mapping address in memory.
 		// Set the value to draw the pixel.
 		
-		let address = (x * 32)  + (y / 16);
-		let value = y - (y / 16);
+		let address = (y * 32)  + (x / 16);
+		let value = x - ((x / 16) * 16);
+		let value = twoToThe[value];
+
+		let old_value = Memory.peek(address + screen_base);
+
+		if (color) {
+			let value = old_value | value;
+		}
 		
-		if (~color) {let value = ~value;}
-		do Memory.poke(address, value);
+		else {
+		    let value = ~value;
+			let value = old_value & value;
+		}
+		
+		do Memory.poke(address + screen_base, value);
+
 		return;
     }
 
