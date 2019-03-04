@@ -94,7 +94,7 @@ class Screen {
     /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
     function void drawLine(int x1, int y1, int x2, int y2) {
 	    
-		var int dx, dy, diff, a, b, temp, start, end;
+		var int dx, dy, diff, a, b, temp, start, end, value;
 		
 		// For convenience sake, convert the line drawing
 		// from right to left to left to right.
@@ -117,8 +117,17 @@ class Screen {
 		// Special case for drawing horizontal line.
 		if (dy = 0) {
 		    while ((a < dx) | (a = dx)) {
+			    
+				// This is not efficient.
 			    do Screen.drawPixel(x1 + a, y2);
 				let a = a + 1;
+				
+				// A more efficient implementation.
+				//let start = x - ((x / 16) * 16);
+				//while ((start > 0) | (start = 0)) {
+				//    let value = value + twoToThe[value];
+				//}
+				
 			}
 			return;
 		}
@@ -127,8 +136,8 @@ class Screen {
 		if (dx = 0) {
 		    let start = Math.min(y1, y2);
 			let end = Math.max(y1, y2);
-		    while((b < dy) | (b = dy)) {
-		        do Screen.drawPixel(start, end + b);
+		    while((b < Math.abs(dy)) | (b = Math.abs(dy))) {
+		        do Screen.drawPixel(x1, start + b);
 				let b = b + 1;
 			}
 			return;
@@ -191,6 +200,15 @@ class Screen {
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
     function void drawCircle(int x, int y, int r) {
+	    var int dy, chord_length;
+		let dy = -r;
+		while ((dy < r) | (dy = r)) {
+		    let chord_length = Math.sqrt((r*r) - (dy*dy));
+		    do Screen.drawLine(x - chord_length, y + dy, x + chord_length, y + dy);
+			let dy = dy + 1;
+		}
+		
+		
 	    return;
     }
 }
