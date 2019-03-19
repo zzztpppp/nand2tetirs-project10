@@ -17,10 +17,14 @@
 class Output {
 
     // Character map for displaying characters
-    static Array charMaps; 
+    static Array charMaps;
+    static Array cursorLoc;    
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
+        let cursorLoc = Array.new(2);
+        let cursorLoc[0] = 0;
+        let cursorLoc[1] = 0;
     }
 
     // Initializes the character map array
@@ -176,28 +180,95 @@ class Output {
     /** Moves the cursor to the j-th column of the i-th row,
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
+        
+        // Prevent the cursor from crossing
+        // the screen edge.
+        if (i < 0) { let i = 0; }
+        if (i > 22) { let i = 22; }
+        if (j < 0) { let j = 0; }
+        if (j > 63) { let j = 63; }
+        
+        let cursorLoc[0] = i;
+        let cursorLoc[1] = j;
+        
+        return;
     }
 
     /** Displays the given character at the cursor location,
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
+        
     }
 
     /** displays the given string starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printString(String s) {
+    
+        var int length;
+        var int i;
+        
+        let i = 0;
+        let length = s.length;
+        while (i < length) {
+            dot Output.printChar(s[i]);
+            let i = i + 1;
+            
+            // Advance the cursor.
+            do Output.moveCursor(cursorLoc[0], cursorLoc[1] + 1);
+        }
+        
+        return;
     }
 
     /** Displays the given integer starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printInt(int i) {
+        // String representation of the given integer.
+        var String s;
+        var int divider;
+        var int quotient;
+        
+        let divider = 10000;
+        let s = String.new(5);
+        
+        // Deal with the negative sign.
+        if (i < 0) {
+            let i = -i;
+            do s.appendChar(45);
+        }
+        
+        // Get the number at each decimal position
+        // and append its charachter rep. to the string.
+        while (divider > 0) {
+            let quotient = i / divider;
+            if (quotient > 0) {
+                do s.appendChar(Output.digit2char(quotient));
+            }
+            
+            let i = i - (divider * quotient);
+            let divider = divider / 10;
+        }
+
+        Output.printString(s);
+        return;        
+    }
+    
+    /** Get the charachter index of the given digit. */
+    function void digit2char(int i) {
+        if ((i < 10) & (i > -1)) { return 48 + i;}
+        
+        return -1;
     }
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
+        do Output.moveCursor(cursorLoc[0] + 1, cursorLoc[1]);
+        return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
+        do Output.moveCursor(cursorLoc[0], cursorLoc[1] - 1);
+        return;
     }
 }
