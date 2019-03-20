@@ -18,13 +18,20 @@ class Output {
 
     // Character map for displaying characters
     static Array charMaps;
-    static Array cursorLoc;    
+    static Array cursorLoc;
+    static int screenBase;
+    static int fontWidth;
+    static int fontHeight;    
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
         let cursorLoc = Array.new(2);
         let cursorLoc[0] = 0;
         let cursorLoc[1] = 0;
+        
+        let screenBase = 16384;
+        let fontWidth = 8;
+        let fontHeight = 11;
     }
 
     // Initializes the character map array
@@ -198,6 +205,42 @@ class Output {
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
         
+        var int address;
+        var int shift;
+        var Array charMap;
+        var boolean isHightBits;  // Wether the grid lies on the left 8-bits of a memory word.
+        var int value;
+        var int old_value;
+        
+        let shift = 0;
+        let address = grid_addr();
+        let charMap = charMaps[c];
+        let isHightBits = ((grid[1] - (grid[1] / 2)) = 0);
+        
+        while(shift < fontHeight) {
+            let value = charMap[shift];
+            let address = address + shift;
+            if (isHightBits) { let value = value * 256; }
+            let old_value = Memory.peek(address);
+            let value = old_value | value;
+            do Memory.poke(address, value);
+            let shift = shift + 1;
+        }
+        
+        return;
+        
+    }
+    
+    /** Get the pixel grid's address in memory of the given grid's location */
+    function int grid_addr() {
+        var int addr;
+        
+        // Each grid is 11 pixels high.
+        let addr = Array.new(11);
+        
+        let addr = (cursorLoc[1] / 2) + (cursorLoc[0] * 11 * 32);
+
+        return addr + screenBase;        
     }
 
     /** displays the given string starting at the cursor location,
@@ -212,9 +255,6 @@ class Output {
         while (i < length) {
             dot Output.printChar(s[i]);
             let i = i + 1;
-            
-            // Advance the cursor.
-            do Output.moveCursor(cursorLoc[0], cursorLoc[1] + 1);
         }
         
         return;
