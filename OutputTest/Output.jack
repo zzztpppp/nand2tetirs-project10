@@ -32,6 +32,10 @@ class Output {
         let screenBase = 16384;
         let fontWidth = 8;
         let fontHeight = 11;
+        
+        do Output.initMap();
+        
+        return;
     }
 
     // Initializes the character map array
@@ -213,17 +217,17 @@ class Output {
         var int old_value;
         
         let shift = 0;
-        let address = grid_addr();
+        let address = Output.grid_addr();
         let charMap = charMaps[c];
-        let isHightBits = ((grid[1] - (grid[1] / 2)) = 0);
+        let isHightBits = ((cursorLoc[1] - (cursorLoc[1] / 2)) = 0);
         
         while(shift < fontHeight) {
             let value = charMap[shift];
-            let address = address + shift;
-            if (isHightBits) { let value = value * 256; }
+            if (~isHightBits) { let value = value * 256; }
             let old_value = Memory.peek(address);
             let value = old_value | value;
             do Memory.poke(address, value);
+            let address = address + 32;
             let shift = shift + 1;
         }
         
@@ -239,8 +243,6 @@ class Output {
         var int addr;
         
         // Each grid is 11 pixels high.
-        let addr = Array.new(11);
-        
         let addr = (cursorLoc[1] / 2) + (cursorLoc[0] * 11 * 32);
 
         return addr + screenBase;        
@@ -254,9 +256,9 @@ class Output {
         var int i;
         
         let i = 0;
-        let length = s.length;
+        let length = s.length();
         while (i < length) {
-            dot Output.printChar(s[i]);
+            do Output.printChar(s.charAt(i));
             let i = i + 1;
         }
         
@@ -292,12 +294,12 @@ class Output {
             let divider = divider / 10;
         }
 
-        Output.printString(s);
+        do Output.printString(s);
         return;        
     }
     
     /** Get the charachter index of the given digit. */
-    function void digit2char(int i) {
+    function int digit2char(int i) {
         if ((i < 10) & (i > -1)) { return 48 + i;}
         
         return -1;
