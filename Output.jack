@@ -227,6 +227,9 @@ class Output {
             let shift = shift + 1;
         }
         
+        // Advance the cursor
+        do Output.moveCursor(cursorLoc[0], cursorLoc[1] + 1);
+        
         return;
         
     }
