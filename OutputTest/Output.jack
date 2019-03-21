@@ -219,7 +219,7 @@ class Output {
         let shift = 0;
         let address = Output.grid_addr();
         let charMap = charMaps[c];
-        let isHightBits = ((cursorLoc[1] - (cursorLoc[1] / 2)) = 0);
+        let isHightBits = ((cursorLoc[1] - ((cursorLoc[1] / 2) * 2)) = 0);
         
         while(shift < fontHeight) {
             let value = charMap[shift];
@@ -307,7 +307,7 @@ class Output {
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
-        do Output.moveCursor(cursorLoc[0] + 1, cursorLoc[1]);
+        do Output.moveCursor(cursorLoc[0] + 1, 0);
         return;
     }
 
