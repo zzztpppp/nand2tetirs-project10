@@ -209,34 +209,61 @@ class Output {
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
         
+        // Print the char at the cursor location.
+        do Output.printCharDumb(c);
+        
+        // Advance the cursor
+        do Output.advance();
+        
+        return;
+        
+    }
+    
+    /** Display the charachter at the cursor location ,
+     *  without advancing the cursor. */
+     function void printCharDumb(char c) {
         var int address;
         var int shift;
         var Array charMap;
         var boolean isHightBits;  // Wether the grid lies on the left 8-bits of a memory word.
         var int value;
         var int old_value;
+        var int eraser;          // Value used to erase the old value in a grid row.
         
         let shift = 0;
+        let eraser = -256;
         let address = Output.grid_addr();
         let charMap = charMaps[c];
         let isHightBits = ((cursorLoc[1] - ((cursorLoc[1] / 2) * 2)) = 0);
         
         while(shift < fontHeight) {
             let value = charMap[shift];
-            if (~isHightBits) { let value = value * 256; }
+            if (~isHightBits) { 
+                let value = value * 256;
+                let eraser = 255;
+            }
+            
             let old_value = Memory.peek(address);
-            let value = old_value | value;
+            let value = old_value & eraser | value;
             do Memory.poke(address, value);
             let address = address + 32;
             let shift = shift + 1;
         }
-        
-        // Advance the cursor
-        do Output.moveCursor(cursorLoc[0], cursorLoc[1] + 1);
+         
+         return;
+     }
+     
+    
+    /** Moves the cursor one grid forward */
+    function void advance() {
+        if (cursorLoc[1] = 63) { do Output.println(); }
+        else {
+            do Output.moveCursor(cursorLoc[0], cursorLoc[1] + 1);
+        }
         
         return;
-        
     }
+    
     
     /** Get the pixel grid's address in memory of the given grid's location */
     function int grid_addr() {
@@ -307,13 +334,43 @@ class Output {
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
-        do Output.moveCursor(cursorLoc[0] + 1, 0);
+        if (cursorLoc[0] = 22) { do Output.moveCursor(0, 0); }
+        else { do Output.moveCursor(cursorLoc[0] + 1, 0); }
+        
         return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
-        do Output.moveCursor(cursorLoc[0], cursorLoc[1] - 1);
+        
+        var int eraser;
+        var boolean isHightBits;
+        
+        let isHightBits = ((cursorLoc[1] - ((cursorLoc[1] / 2) * 2)) = 0);
+        if (isHightBits) { let eraser = -256; }
+        else             { let eraser = 255; }
+        
+        // Deal with cursor at left edge of screen.
+        if (cursorLoc[1] = 0) {
+            
+            // Cursor at top left corner.
+            if (cursorLoc[0] = 0) { 
+                let cursorLoc[0] = 22;
+                let cursorLoc[1] = 63;
+            }
+            
+            else {
+                let cursorLoc[1] = 63;
+                let cursorLoc[0] = cursorLoc[0] - 1;
+            }
+        }
+        
+        else {
+            let cursorLoc[1] = cursorLoc[1] - 1;
+        }
+        
+        do Output.printCharDumb(32);
+         
         return;
     }
 }
