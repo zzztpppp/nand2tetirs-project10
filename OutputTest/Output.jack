@@ -299,13 +299,14 @@ class Output {
         var String s;
         var int divider;
         var int quotient;
+        var boolean starts;
         
+        let starts = false;
         let divider = 10000;
-        let s = String.new(5);
+        let s = String.new(6);
         
         // Deal with the negative sign.
         if (i < 0) {
-            let i = -i;
             do s.appendChar(45);
         }
         
@@ -313,14 +314,17 @@ class Output {
         // and append its charachter rep. to the string.
         while (divider > 0) {
             let quotient = i / divider;
-            if (quotient > 0) {
-                do s.appendChar(Output.digit2char(quotient));
+            if (~(quotient = 0)) { let starts = true; }
+            if (starts) {
+                do s.appendChar(Output.digit2char(Math.abs(quotient)));
             }
             
             let i = i - (divider * quotient);
             let divider = divider / 10;
         }
-
+        
+        // do Output.printString("Here");
+        
         do Output.printString(s);
         return;        
     }
