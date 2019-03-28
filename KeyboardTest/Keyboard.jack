@@ -85,7 +85,7 @@ class Keyboard {
         
         let keyValue = Keyboard.readChar();
         while (~(keyValue = newLine)) {
-            if (keyValue = String.backSpace()) { do inputString.eraseLastChar(); }
+            if ((keyValue = String.backSpace()) & (inputString.length() > 0)) { do inputString.eraseLastChar(); }
             else                               { do inputString.appendChar(keyValue); }
             let keyValue = Keyboard.readChar();
         }
@@ -113,7 +113,7 @@ class Keyboard {
         
         do Output.printString(message);
       
-        while ((Keyboard.isInt(keyValue)) | allowNeg) {
+        while ((Keyboard.isInt(keyValue)) | allowNeg | (keyValue = String.backSpace())) {
             if (keyValue = 45) {
                 do inputString.appendChar(45);
                 let allowNeg = false;
@@ -122,6 +122,14 @@ class Keyboard {
             if (Keyboard.isInt(keyValue)) {
                 do inputString.appendChar(keyValue);
                 let allowNeg = false;
+            }
+            
+            if ((keyValue = String.backSpace()) & (inputString.length() > 0)) {
+                do inputString.eraseLastChar();
+            }
+            
+            if (inputString.length() = 0) {
+                let allowNeg = true;
             }
             
             let keyValue = Keyboard.readChar();
