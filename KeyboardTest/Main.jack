@@ -89,6 +89,9 @@ class Main {
         do Output.println();
         do Output.printString("Test completed successfully");
         
+        let s = "-23kd";
+        do Output.printInt(s.intValue());
+        
         return;
     }
 }

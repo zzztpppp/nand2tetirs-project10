@@ -11,39 +11,71 @@
  * string-oriented operations.
  */
 class String {
-
+    
+    field Array str;
+    field int length;
+    
     /** constructs a new empty string with a maximum length of maxLength
      *  and initial length of 0. */
     constructor String new(int maxLength) {
+        let str = Array.new(maxLength);
     }
 
     /** Disposes this string. */
     method void dispose() {
+        do str.dispose();
+        return;
     }
 
     /** Returns the current length of this string. */
     method int length() {
+        return length;
     }
 
     /** Returns the character at the j-th location of this string. */
     method char charAt(int j) {
+        return str[j];
     }
 
     /** Sets the character at the j-th location of this string to c. */
     method void setCharAt(int j, char c) {
+        let str[j] = c;
+        return;
     }
 
     /** Appends c to this string's end and returns this string. */
     method String appendChar(char c) {
+        let str[length] = c;
+        let length = length + 1;
+        return this;
     }
 
     /** Erases the last character from this string. */
     method void eraseLastChar() {
+        if (length > 0) { let length = length - 1; }
+        return;
     }
 
     /** Returns the integer value of this string, 
      *  until a non-digit character is detected. */
     method int intValue() {
+        var boolean isNeg;
+        var boolean i;
+        var res;
+        
+        let res = 0;
+        let starts = 0;
+        let isNeg = false;
+        
+        if (length = 0) { return 0; }
+        if (str[0] == 45) { 
+            let isNeg = false;
+            let i = i + 1;
+        }
+        while (String.isInt(str[i]) & (i < length)) {
+            
+        }
+        
     }
 
     /** Sets this string to hold a representation of the given value. */
@@ -52,13 +84,28 @@ class String {
 
     /** Returns the new line character. */
     function char newLine() {
+        return 128;
     }
 
     /** Returns the backspace character. */
     function char backSpace() {
+        return 129;
     }
 
     /** Returns the double quote (") character. */
     function char doubleQuote() {
+        return 34;
+    }
+    
+    /** Checks whether the character is a number */
+    function boolean isInt(char c) {
+        if ((c < 48) | (c > 57)) { return false; }
+        
+        return true;
+    }
+    
+    /** Map a character to its digit rep. */
+    function int char2digit(char) {
+        
     }
 }
