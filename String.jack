@@ -14,11 +14,13 @@ class String {
     
     field Array str;
     field int length;
+    field int size;
     
     /** constructs a new empty string with a maximum length of maxLength
      *  and initial length of 0. */
     constructor String new(int maxLength) {
         let str = Array.new(maxLength);
+        let size = maxLength;
     }
 
     /** Disposes this string. */
@@ -45,9 +47,11 @@ class String {
 
     /** Appends c to this string's end and returns this string. */
     method String appendChar(char c) {
-        let str[length] = c;
-        let length = length + 1;
-        return this;
+        if (length < size){
+            let str[length] = c;
+            let length = length + 1;
+        }
+        return str;
     }
 
     /** Erases the last character from this string. */
@@ -73,13 +77,39 @@ class String {
             let i = i + 1;
         }
         while (String.isInt(str[i]) & (i < length)) {
-            
+            let res = res * 10;
+            let res = res + str[i]
+            let i = i + 1;
         }
         
+        return res;
     }
 
     /** Sets this string to hold a representation of the given value. */
     method void setInt(int val) {
+        var boolean isNeg;
+        var int lastDigit;
+        var char c;
+        
+        if (val < 0) {
+            let str.append(45);
+        }
+        let length = 0;
+        
+        let lastDigit = val - ((val / 10) * 10);
+        let c = String.digit2char(lastDigit);
+        if (val < 10) {
+            do str.appendChar(c);
+            return;
+        }
+        
+        else {
+            do setInt(val / 10);
+        }
+        
+        return;
+        
+        
     }
 
     /** Returns the new line character. */
@@ -106,6 +136,11 @@ class String {
     
     /** Map a character to its digit rep. */
     function int char2digit(char) {
-        
+        return char - 48;
+    }
+    
+    /** Map a digit to its ASCII rep. */
+    function char digit2char(int) {
+        return int + 48;
     }
 }
