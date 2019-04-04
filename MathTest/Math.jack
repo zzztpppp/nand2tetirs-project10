@@ -1,0 +1,123 @@
+
+class Math {
+    
+    static Array twoToThe;
+    static boolean isInitailized;
+    
+    /** Initialized statical variables */
+    function void init() {
+        var int i;
+        var int fill;
+        
+        let twoToThe = Array.new(16);
+        let isInitailized = true;
+        
+        // Fill the elements at ith position wiht 2^i
+        let i = 0;
+        let fill = 1;
+        while (i < 15) {
+            let twoToThe[i] = fill;
+            let fill = fill + fill;
+            let i = i + 1;
+        }
+        
+        // The largest number a 16 bit 2's complement can represent.
+        let twoToThe[15] = 32767 + 1;
+        
+        return;
+    }
+
+    /** Calculate absolute value of the given number */
+    function int abs(int x) {
+        if (x < 0) { return -x; }
+        return x;
+    }
+    
+        /** Calculate x times y */
+    function int multiply(int x, int y) {
+        var int res;
+        var int shiftedX;
+        var int i;
+        
+        let i = 0;
+        let res = 0;
+        let shiftedX = x;
+        
+        while (i < 16) {
+            if (Math.bit(y, i)) { let res = res + shiftedX; }
+            let shiftedX = shiftedX + shiftedX;
+            let i = i + 1;
+        }
+        
+        return res;
+    }
+    
+    /** Calculate x divided by y, only allows x to be negative number */
+    function int divide (int x, int y) {
+        var boolean neg, result;
+        
+        let neg = false;
+        
+        if (x < 0) {
+            let x = Math.abs(x);
+            let neg = true;
+        }
+        
+        let result = Math.divide_positive(x, y);
+        if (neg) { let result = -result; }
+        
+        return result;
+    }
+    
+    /** Calculate x divided by y, only positive numbers are supported! */
+    function int divide_positive(int x, int y) {
+        
+        var int q;
+
+        if ( (x < y) | (y < 0)) { return 0; }
+        
+        let q = Math.divide(x, 2*y);
+        
+        if ((x - (2*y*q)) < y) { return 2*q; }
+        else                 { return 2*q + 1; }
+    }
+    
+    /** Calculate the minimum between x and y */
+    function int min(int x, int y) {
+        if (x > y) { return y; }
+        return x;
+    }
+    
+    /** Calculate the maximum between x and y */
+    function int max(int x, int y) {
+        if (x > y) { return x; }
+        return y;
+    }
+    
+    /** Calculate the square root of the given x */
+    function int sqrt(int x) {
+        
+        var int j, result, temp;
+        
+        let j = 7;
+        let result = 0;
+        let temp = 0;
+        
+        while ((j > 0) | (j = 0)) {
+            
+            let temp = (result + twoToThe[j]) * (result + twoToThe[j]);
+            if (((temp = x) | (temp < x)) & (temp > 0)) { let result = result + twoToThe[j]; }
+            let j = j - 1;
+        }
+        
+        return result;
+    }
+    
+    /** Helper function to check if i's bit of a integer is 1 */
+    function boolean bit(int x, int i) {
+        if (~isInitailized){
+            do Math.init();
+        }
+        return ~((x & twoToThe[i]) = 0);
+    }
+}
