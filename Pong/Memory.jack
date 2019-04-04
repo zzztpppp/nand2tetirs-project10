@@ -20,7 +20,7 @@ class Memory {
         let p = 0;
         let heap = 2048;
         let free_list = heap;
-        let heap[0] = 0;
+        let heap[0] = -31416;
         let heap[1] = 14334;
         return;
     }
@@ -43,13 +43,13 @@ class Memory {
 		let block = Memory._alloc(size);
 		
 		// If no suitble segment available, try memory defragmentation
-		if (block = 0) {
+		if (block = -31416) {
 		    do Memory._defragment();
 			let block = Memory._alloc(size);
 		}
 		
 		// If defragmentation fails, raise an error.
-		if (block = 0) {
+		if (block = -31416) {
 		    do Sys.error(5);
 		}
 		
@@ -68,13 +68,15 @@ class Memory {
         // Find the first-fit memory segment
         while (true) {
             // Terminates when reaching the end of the free list
-            if (current = 0) {
-                return 0;
+            if (current = -31416) {
+                return -31416;
             }
             
             if ((current[1] > (size + 2)) | (current[1] = (size + 2))) {
-			    let block = current + current[1] - size;
+			    let block = current + current[1] - size - 2;
 				let current[1] = current[1] - size;
+                let block[0] = -31416;      // Next = null
+                let block[1] = size;
                 return block;
             }
             
@@ -82,7 +84,7 @@ class Memory {
                 let current = next;
             }
         }
-		return 0;
+		return -31416;
     }
 	
 	/** Merge adjcent memory fragment */
@@ -101,16 +103,33 @@ class Memory {
 		// Append the memory segment of the given object to the end
 		// of the free list.
 		
-		while (true) {
-		    if (current[0] = 0) { 
-			    let current[0] = base; 
-				let base[0] = 0;
-				return; 
-			}
-			else {
-			    let current = current[0];
-			}
-		}
+		//while (true) {
+		//    if (current[0] = -31416) { 
+		//	    let current[0] = base; 
+		//		let base[0] = -31416;
+		//		return; 
+		//	}
+		//	else {
+		//	    let current = current[0];
+		//	}
+		//}
+        
+        //  A new implementation featuring de-fragmentation.
+        while (true) {
+            if (current[0] = -31416) { 
+                let current[1] = base[1] + 2;
+                return;                
+            }
+            else {
+                if ((current < base) & (current[0] > base)) {
+                    let current[1] = base[1] + 2;
+                    return;
+                }
+                else {
+                    let current = current[0];
+                }
+            }
+        }
 		
 		return; 
     }    

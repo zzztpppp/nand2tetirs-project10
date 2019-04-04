@@ -103,16 +103,33 @@ class Memory {
 		// Append the memory segment of the given object to the end
 		// of the free list.
 		
-		while (true) {
-		    if (current[0] = -31416) { 
-			    let current[0] = base; 
-				let base[0] = -31416;
-				return; 
-			}
-			else {
-			    let current = current[0];
-			}
-		}
+		//while (true) {
+		//    if (current[0] = -31416) { 
+		//	    let current[0] = base; 
+		//		let base[0] = -31416;
+		//		return; 
+		//	}
+		//	else {
+		//	    let current = current[0];
+		//	}
+		//}
+        
+        //  A new implementation featuring de-fragmentation.
+        while (true) {
+            if (current[0] = -31416) { 
+                let current[1] = base[1] + 2;
+                return;                
+            }
+            else {
+                if ((current < base) & (current[0] > base)) {
+                    let current[1] = base[1] + 2;
+                    return;
+                }
+                else {
+                    let current = current[0];
+                }
+            }
+        }
 		
 		return; 
     }    
