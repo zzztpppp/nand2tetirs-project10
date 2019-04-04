@@ -132,27 +132,37 @@ class Screen {
 			let value = 0;
 			while ((diff < dx) | (diff = dx)) {
 				
-				let value = value + twoToThe[shift];
-				// Write a word of value into memory.
-				if (shift = 15) {
-	
-					let temp = Memory.peek(addr + screen_base);
-					if (color) { let value = value | temp; }
-					else       { let value = (~value) & temp; }
-					do Memory.poke(addr + screen_base, value);
-					
-					// Advance the 
-					let addr = addr + 1;
-					
-					// Rest shift to point to the first bit of next
-					// word.
-					let shift = -1;
-					
-					// Reset the word value.
-					let value = 0;
-				}
-				let shift = shift + 1;
-				let diff = diff + 1;			
+                // Quick path for line body drawing.
+                if ((shift = 0) & (((diff + 16) < dx) | ((diff + 16) = dx))) {
+                    if (color) { let value = -1; }
+                    else       { let value = 0; }
+                    do Memory.poke(screen_base + addr, value);
+                    let diff = diff + 16;
+                    let addr = addr + 1;
+                    let value = 0;
+                }
+                else {
+                    let value = value + twoToThe[shift];
+                    
+                    if (shift = 15) {
+                        let temp = Memory.peek(addr + screen_base);
+                        if (color) { let value = value | temp; }
+                        else       { let value = (~value) & temp; }
+                        do Memory.poke(addr + screen_base, value);
+                        
+                        // Advance the 
+                        let addr = addr + 1;
+                        
+                        // Rest shift to point to the first bit of next
+                        // word.
+                        let shift = -1;
+                        
+                        // Reset the word value.
+                        let value = 0;
+                    }
+                    let shift = shift + 1;
+                    let diff = diff + 1;
+                }                    
 			}
 			
 			// Draw the pixels having length < 16 bit at tail.
